@@ -25,10 +25,16 @@ app.get('/todos', (req, res) => {
             console.error(err.message);  // Log the error if the query fails
             res.status(500).json({ error: "Failed to retrieve todos" });
         } else {
-            res.json(rows);  // Return the list of todos as JSON response
+            // Map through each row and convert 'completed' field to boolean
+            const todos = rows.map(todo => ({
+                ...todo,
+                completed: !!todo.completed  // Convert 1 to true and 0 to false
+            }));
+            res.json(todos);  // Return the list of todos as JSON response
         }
     });
 });
+
 
 // POST /todos - Add a new to-do item to the database
 app.post('/todos', (req, res) => {
